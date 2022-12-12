@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:learn_render_object/custom_expanded.dart';
+
+import 'custom_column.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const Scaffold(body: SafeArea(child: MyHomePage())),
     );
   }
 }
@@ -29,30 +32,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-         Spacer(),
-         Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            "A definitive guide to Render Object in Flutter",
-            style: TextStyle(
-              fontSize: 32,
+    return Container(
+      color: Colors.red,
+      child: CustomColumn(
+        children: const [
+          CustomExpanded(),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              "A definitive guide to Render Object in Flutter",
+              style: TextStyle(
+                fontSize: 32,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            "bycreativeornotcreative",
-            style: TextStyle(
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              "bycreativeornotcreative",
+              style: TextStyle(),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
-        ),
-        Spacer(),
-      ],
+          CustomExpanded(),
+        ],
+      ),
     );
   }
 }
