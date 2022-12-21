@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_render_object/custom_box.dart';
 import 'package:learn_render_object/custom_expanded.dart';
 
 import 'custom_column.dart';
@@ -56,6 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           CustomExpanded(),
+          CustomBox(
+            flex: 3,
+            color: Colors.blue,
+          ),
         ],
       ),
     );
