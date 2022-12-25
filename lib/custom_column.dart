@@ -97,19 +97,18 @@ class RenderCustomColumn extends RenderBox
           childSize = child.getDryLayout(childConstraints);
         }
         height += childSize.height;
-        // print("h: $height | $flex| ${child.debugCreator}");
         width = max(width, childSize.width);
       }
       child = childParentData.nextSibling;
     }
     var flexHeight = (constraints.maxHeight - height) / totalFlex;
     child = firstChild;
-    final flexConstraints =
-        BoxConstraints.tight(Size(constraints.maxWidth, flexHeight));
     while (child != null) {
       final childParentData = child.parentData as CustomColumnParentData;
       int flex = childParentData.flex ?? 0;
       if (flex > 0) {
+        final flexConstraints =
+            BoxConstraints.tight(Size(constraints.maxWidth, flexHeight * flex));
         Size flexSize;
         if (!dryLayoutPass) {
           child.layout(
@@ -127,6 +126,59 @@ class RenderCustomColumn extends RenderBox
       child = childParentData.nextSibling;
     }
     return Size(width, height);
+  }
+
+  @override
+  double computeMinIntrinsicHeight(double width) {
+    double height = 0.0;
+    RenderBox? child = firstChild;
+    while (child != null) {
+      final parentData = child.parentData as CustomColumnParentData;
+      height += child.getMinIntrinsicHeight(width);
+      child = parentData.nextSibling;
+    }
+    return height;
+  }
+
+  @override
+  double computeMaxIntrinsicHeight(double width) {
+    double height = 0.0;
+    RenderBox? child = firstChild;
+    while (child != null) {
+      final parentData = child.parentData as CustomColumnParentData;
+      height += child.getMaxIntrinsicHeight(width);
+      child = parentData.nextSibling;
+    }
+    return height;
+  }
+
+  @override
+  double computeMinIntrinsicWidth(double height) {
+    double width = 0.0;
+    RenderBox? child = firstChild;
+    while (child != null) {
+      final parentData = child.parentData as CustomColumnParentData;
+      width = max(width, child.getMinIntrinsicWidth(height));
+      child = parentData.nextSibling;
+    }
+    return width;
+  }
+
+  @override
+  double computeMaxIntrinsicWidth(double height) {
+    double width = 0.0;
+    RenderBox? child = firstChild;
+    while (child != null) {
+      final parentData = child.parentData as CustomColumnParentData;
+      width = max(width, child.getMaxIntrinsicWidth(height));
+      child = parentData.nextSibling;
+    }
+    return width;
+  }
+
+  @override
+  double? computeDistanceToActualBaseline(TextBaseline baseline) {
+    return defaultComputeDistanceToFirstActualBaseline(baseline);
   }
 
   @override

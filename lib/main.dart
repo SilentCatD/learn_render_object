@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:learn_render_object/custom_box.dart';
 import 'package:learn_render_object/custom_expanded.dart';
@@ -30,16 +32,28 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 2),
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomColumn(
       alignment: CustomColumnAlignment.center,
-      children: const [
-        CustomExpanded(
-          flex: 2,
+      children: [
+        const CustomExpanded(
+          flex: 3,
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(16),
           child: Text(
             "A definitive guide to Render Object in Flutter",
@@ -49,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(16),
           child: Text(
             "bycreativeornotcreative",
@@ -57,9 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
             textAlign: TextAlign.center,
           ),
         ),
-        CustomBox(
-          color: Colors.red,
-          flex: 3,
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) => CustomBox(
+            rotation: _controller.value * 2 * pi,
+            onTap: () {
+              _controller.repeat();
+            },
+            color: Colors.red,
+            flex: 3,
+          ),
         ),
       ],
     );
