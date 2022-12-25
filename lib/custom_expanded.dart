@@ -3,7 +3,7 @@ import 'package:learn_render_object/custom_column.dart';
 
 class CustomExpanded extends ParentDataWidget<CustomColumnParentData> {
   const CustomExpanded(
-      {super.key, this.flex = 1, super.child = const SizedBox()})
+      {super.key, this.flex = 1, super.child = const SizedBox.shrink()})
       : assert(flex > 0);
 
   final int flex;

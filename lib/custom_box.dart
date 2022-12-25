@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:learn_render_object/custom_column.dart';
 
+
 class CustomBox extends LeafRenderObjectWidget {
   final Color color;
   final int flex;
@@ -12,6 +13,14 @@ class CustomBox extends LeafRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     return RenderCustomBox(color: color, flex: flex);
   }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant RenderCustomBox renderObject) {
+    renderObject
+      ..flex = flex
+      ..color = color;
+  }
 }
 
 class RenderCustomBox extends RenderBox {
@@ -19,12 +28,27 @@ class RenderCustomBox extends RenderBox {
       : _color = color,
         _flex = flex;
 
-  Color _color;
   int _flex;
+
+  int get flex => _flex;
+
+  set flex(int value) {
+    assert(value >= 0);
+    if (flex == value) return;
+    _flex = value;
+    parentData?.flex = _flex;
+    markParentNeedsLayout();
+  }
+
+  Color _color;
 
   Color get color => _color;
 
-  int get flex => _flex;
+  set color(Color value) {
+    if (_color == value) return;
+    _color = value;
+    markNeedsPaint();
+  }
 
   @override
   bool get sizedByParent => true;
@@ -38,13 +62,13 @@ class RenderCustomBox extends RenderBox {
   }
 
   @override
-  Size computeDryLayout(BoxConstraints constraints) {
-    return constraints.biggest;
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    parentData?.flex = flex;
   }
 
   @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-    parentData!.flex = _flex;
+  Size computeDryLayout(BoxConstraints constraints) {
+    return constraints.biggest;
   }
 }

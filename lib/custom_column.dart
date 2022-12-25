@@ -3,12 +3,28 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+enum CustomColumnAlignment {
+  start,
+  center,
+}
+
 class CustomColumn extends MultiChildRenderObjectWidget {
-  CustomColumn({super.key, super.children});
+  CustomColumn(
+      {super.key,
+      super.children,
+      this.alignment = CustomColumnAlignment.center});
+
+  final CustomColumnAlignment alignment;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderCustomColumn();
+    return RenderCustomColumn(alignment: alignment);
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant RenderCustomColumn renderObject) {
+    renderObject.alignment = alignment;
   }
 }
 
@@ -16,11 +32,24 @@ class RenderCustomColumn extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, CustomColumnParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, CustomColumnParentData> {
+  RenderCustomColumn({required CustomColumnAlignment alignment})
+      : _alignment = alignment;
+
   @override
   void setupParentData(covariant RenderObject child) {
     if (child.parentData is! BoxParentData) {
       child.parentData = CustomColumnParentData();
     }
+  }
+
+  CustomColumnAlignment _alignment;
+
+  CustomColumnAlignment get alignment => _alignment;
+
+  set alignment(CustomColumnAlignment value) {
+    if (_alignment == value) return;
+    _alignment = value;
+    markNeedsLayout();
   }
 
   @override
@@ -30,7 +59,11 @@ class RenderCustomColumn extends RenderBox
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData as CustomColumnParentData;
-      childParentData.offset = Offset(0, childOffset.dy);
+      childParentData.offset = Offset(
+          alignment == CustomColumnAlignment.center
+              ? (size.width - child.size.width) / 2
+              : 0,
+          childOffset.dy);
       childOffset += Offset(0, child.size.height);
 
       child = childParentData.nextSibling;
@@ -64,11 +97,11 @@ class RenderCustomColumn extends RenderBox
           childSize = child.getDryLayout(childConstraints);
         }
         height += childSize.height;
+        // print("h: $height | $flex| ${child.debugCreator}");
         width = max(width, childSize.width);
       }
       child = childParentData.nextSibling;
     }
-
     var flexHeight = (constraints.maxHeight - height) / totalFlex;
     child = firstChild;
     final flexConstraints =

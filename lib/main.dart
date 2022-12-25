@@ -33,36 +33,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-      child: CustomColumn(
-        children: const [
-          CustomExpanded(),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              "A definitive guide to Render Object in Flutter",
-              style: TextStyle(
-                fontSize: 32,
-              ),
-              textAlign: TextAlign.center,
+    return CustomColumn(
+      alignment: CustomColumnAlignment.center,
+      children: const [
+        CustomExpanded(
+          flex: 2,
+        ),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            "A definitive guide to Render Object in Flutter",
+            style: TextStyle(
+              fontSize: 32,
             ),
+            textAlign: TextAlign.center,
           ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              "bycreativeornotcreative",
-              style: TextStyle(),
-              textAlign: TextAlign.center,
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            "bycreativeornotcreative",
+            style: TextStyle(),
+            textAlign: TextAlign.center,
           ),
-          CustomExpanded(),
-          CustomBox(
-            flex: 3,
-            color: Colors.blue,
-          ),
-        ],
-      ),
+        ),
+        CustomBox(
+          color: Colors.red,
+          flex: 3,
+        ),
+      ],
     );
   }
 }
