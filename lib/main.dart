@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:learn_render_object/custom_box.dart';
 import 'package:learn_render_object/custom_expanded.dart';
+import 'package:learn_render_object/custom_proxy.dart';
 
 import 'custom_column.dart';
 
@@ -47,43 +48,55 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return CustomColumn(
-      alignment: CustomColumnAlignment.center,
+    return Stack(
       children: [
-        const CustomExpanded(
-          flex: 3,
-        ),
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            "A definitive guide to Render Object in Flutter",
-            style: TextStyle(
-              fontSize: 32,
+        CustomColumn(
+          alignment: CustomColumnAlignment.center,
+          children: [
+            const CustomExpanded(
+              flex: 3,
             ),
-            textAlign: TextAlign.center,
-          ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                "A definitive guide to Render Object in Flutter",
+                style: TextStyle(
+                  fontSize: 32,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                "bycreativeornotcreative",
+                style: TextStyle(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) => CustomBox(
+                rotation: _controller.value * 2 * pi,
+                onTap: () {
+                  if (_controller.isAnimating) {
+                    _controller.stop();
+                    return;
+                  }
+                  _controller.repeat();
+                },
+                color: Colors.red,
+                flex: 3,
+              ),
+            ),
+          ],
         ),
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            "bycreativeornotcreative",
-            style: TextStyle(),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => CustomBox(
-            rotation: _controller.value * 2 * pi,
-            onTap: () {
-              if (_controller.isAnimating) {
-                _controller.stop();
-                return;
-              }
-              _controller.repeat();
-            },
-            color: Colors.red,
-            flex: 3,
+        CustomProxy(
+          child: SizedBox.expand(
+            child: Image.network(
+              "https://blog.logrocket.com/wp-content/uploads/2021/11/widget-element-tree-academind-1.png",
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ],
