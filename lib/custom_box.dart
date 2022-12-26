@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,7 +17,7 @@ class CustomBox extends LeafRenderObjectWidget {
     required this.color,
     this.flex = 1,
     this.onTap,
-  });
+  }) : assert(rotation >= 0 && rotation <= 2 * pi);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -122,6 +121,19 @@ class RenderCustomBox extends RenderBox {
   }
 
   @override
+  bool hitTestSelf(Offset position) {
+    return size.contains(position);
+  }
+
+  @override
+  void handleEvent(PointerEvent event, covariant BoxHitTestEntry entry) {
+    debugHandleEvent(event, entry);
+    if (event is PointerDownEvent) {
+      _tapGestureRecognizer.addPointer(event);
+    }
+  }
+
+  @override
   Size computeDryLayout(BoxConstraints constraints) {
     return constraints.biggest;
   }
@@ -129,7 +141,7 @@ class RenderCustomBox extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     final canvas = context.canvas;
-    final smallRectSizeWith = size.shortestSide / 3;
+    final smallRectSizeWith = size.shortestSide / (3 - sin(rotation));
 
     canvas.save();
     canvas.drawRect(offset & size, Paint()..color = color);

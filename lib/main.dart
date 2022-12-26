@@ -76,6 +76,10 @@ class _MyHomePageState extends State<MyHomePage>
           builder: (context, child) => CustomBox(
             rotation: _controller.value * 2 * pi,
             onTap: () {
+              if (_controller.isAnimating) {
+                _controller.stop();
+                return;
+              }
               _controller.repeat();
             },
             color: Colors.red,
